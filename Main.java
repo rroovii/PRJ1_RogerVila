@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.Integer.parseInt;
 import java.util.Scanner;
@@ -85,6 +87,7 @@ public class Main {
                 menuEstoc();
                 break;
             case 3:
+                gestionarComanda();
                 break;
             case 4:
                 break;
@@ -120,8 +123,8 @@ public class Main {
 
     static void menuEstoc(){
         System.out.println("1. MOSTRAR ESTOC");
-        System.out.println("2. ACTUALITZAR ESTOC");
-
+        System.out.println("2. AFEGIR ESTOC");
+        System.out.println("3. Sortir");
         Scanner sc = new Scanner(System.in);
         int opcio = sc.nextInt();
 
@@ -130,21 +133,10 @@ public class Main {
                 mostrarEstoc();
                 break;
             case 2:
-            System.out.println("1. AFEGIR ESTOC");
-            System.out.println("2. ELIMINAR ESTOC");
-                int opcio2 = sc.nextInt();
-                    switch(opcio2) {
-                        case 1:
-                            afegirEstoc();
-                            break;
-                        case 2:
-                            eliminarEstoc();                       
-                            break;
-                        default:
-                            System.out.println("Has sortit del programa");
-                            break;
-                    }
+                afegirEstoc();
                 break;
+            case 3:
+                return;
             default:
                 System.out.println("Has sortit del programa");
                 break;
@@ -236,7 +228,77 @@ public class Main {
         }
 }
 
-    static void eliminarEstoc(){
+static void gestionarComanda() {
+    // Crear una nova comanda
+    Comanda comanda = new Comanda(1);
 
+    // Mostrar el menú
+    System.out.println("Menú de plats:");
+    consultarMenu();
+
+    // Afegir plats a la comanda
+    Scanner sc = new Scanner(System.in);
+    while (true) {
+        System.out.print("Entra el nom del plat que vols afegir a la comanda: ");
+        String nomPlat = sc.nextLine();
+        Plat plat = buscarPlat(nomPlat);
+        if (plat != null) {
+            comanda.getPlats().add(plat);
+            System.out.println("Plat afegit a la comanda!");
+        } else {
+            System.out.println("Plat no trobat!");
+        }
+        System.out.print("Vols afegir més plats? (s/n): ");
+        String resposta = sc.nextLine();
+        if (resposta.equalsIgnoreCase("n")) {
+            break;
+        }
     }
+
+    // Calcular el preu total
+    double preuTotal = 0;
+    for (Plat plat : comanda.getPlats()) {
+        preuTotal += plat.getPreu();
+    }
+    comanda.setPreuTotal(preuTotal);
+
+    // Guardar la comanda en el fitxer DADES/COMANDA.txt
+    try {
+        PrintWriter writer = new PrintWriter(new FileWriter("DADES/COMANDA.txt", true));
+        writer.println("Comanda " + comanda.getIdComanda());
+        for (Plat plat : comanda.getPlats()) {
+            writer.println(plat.getNom() + " - " + plat.getPreu() + "€");
+        }
+        writer.println("Preu total: " + comanda.getPreuTotal() + "€");
+        writer.println();
+        writer.close();
+        System.out.println("Comanda guardada en DADES/COMANDA.txt");
+    } catch (IOException e) {
+        System.out.println("No s'ha pogut crear el fitxer");
+        e.printStackTrace();
+    }
+}
+
+static Plat buscarPlat(String nomPlat) {
+    try {
+        File myObj = new File("DADES/MENU.txt");
+        Scanner myReader = new Scanner(myObj);
+        while (myReader.hasNextLine()) {
+            String data = myReader.nextLine();
+            String regex = "[.]";
+            String[] myArray = data.split(regex);
+            String nomActual = myArray[0];
+            if (nomActual.equalsIgnoreCase(nomPlat)) {
+                double preu = Double.parseDouble(myArray[1]);
+                String tipus = myArray[2];
+                return new Plat(nomActual, preu, tipus);
+            }
+        }
+        myReader.close();
+    } catch (FileNotFoundException e) {
+        System.out.println("No s'ha trobat el fitxer");
+        e.printStackTrace();
+    }
+    return null;
+}
 }
