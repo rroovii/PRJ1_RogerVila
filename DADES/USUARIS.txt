@@ -1,2 +1,5 @@
-Roger.123456.Gerent.Encarregat
-Arnau.AB.Empleat.Mati
+Roger,123456,Gerent,Encarregat
+Arnau,AB,Empleat,Mati
+Franco,peruano,Empleat,Diari
+
+Cyprian,24124214KAJFA,Empleat,Tarda
