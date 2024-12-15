@@ -3,3 +3,5 @@ Arnau,AB,Empleat,Mati
 Franco,peruano,Empleat,Diari
 
 Cyprian,24124214KAJFA,Empleat,Tarda
+
+Xavier,1234,Empleat,Mati

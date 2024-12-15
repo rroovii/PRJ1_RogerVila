@@ -1,13 +1,14 @@
 import java.util.ArrayList;
 
 public class Comanda {
+    private static int nextId = 1;
     private int idComanda;
     private ArrayList<Plat> plats = new ArrayList<>(); ;
     private double preuTotal;
 
     // Constructor
-    public Comanda(int idComanda) {
-        this.idComanda = idComanda;
+    public Comanda() {
+        this.idComanda = nextId++;
         this.plats = new ArrayList<>();
         this.preuTotal = 0.0;
     }

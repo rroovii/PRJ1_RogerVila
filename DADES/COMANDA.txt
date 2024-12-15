@@ -12,3 +12,7 @@ KEBAB EL HUESO - 6.0€
 COCACOLA - 2.0€
 Preu total: 19.0€
 
+Comanda 1
+KEBAB EL HUESO - 6.0€
+Preu total: 6.0€
+

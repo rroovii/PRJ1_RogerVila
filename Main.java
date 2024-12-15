@@ -12,11 +12,24 @@ public class Main {
     }
     
     static void validaUsuari() {
-        System.out.print("Entra el nom d'usuari: ");
-        Scanner sc = new Scanner(System.in);
-        String usuari = sc.nextLine();
+        System.out.println("1. INICIA SESSIÓ");
+        System.out.println("2. Sortir");
 
-        cercaUsuari(usuari);
+        Scanner sc = new Scanner(System.in);
+        int opcio = sc.nextInt();
+
+        switch(opcio){
+            case 1: 
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Entra el nom d'usuari: ");
+                String usuari = scanner.nextLine();
+                cercaUsuari(usuari);
+                break;
+            case 2:
+                System.out.println("Sortint...");
+                System.exit(0);
+        }
+        
     }
 
     static void cercaUsuari(String usuari) {
@@ -49,7 +62,8 @@ public class Main {
         System.out.println("1. GESTIONAR PERSONAL");
         System.out.println("2. CONSULTAR MENU");
         System.out.println("3. GENERAR INFORME");
-        System.out.println("4. GESTIONAR COMANDA");
+        System.out.println("4. ACTUALITZAR ESTOC");
+        System.out.println("5. Sortir");
 
         Scanner sc = new Scanner(System.in);
         int opcio = sc.nextInt();
@@ -65,7 +79,10 @@ public class Main {
                 // Implementar generació d'informes
                 break;
             case 4:
-                gestionarComanda(null);
+                menuEstoc();
+                break;
+            case 5:
+                validaUsuari();
                 break;
             default:
                 System.out.println("Has sortit del programa");
@@ -169,6 +186,7 @@ public class Main {
             System.out.println("No s'ha trobat el fitxer");
             e.printStackTrace();
         }
+        validaUsuari();
     }
 
     static void afegirEstoc() {
@@ -230,10 +248,11 @@ public class Main {
             System.out.println("No s'ha trobat el fitxer d'estoc.");
             e.printStackTrace();
         }
+        validaUsuari();
     }
 
     static void gestionarComanda(Empleat empleat) {
-        Comanda comanda = new Comanda(1);
+        Comanda comanda = new Comanda();
 
         System.out.println("Menú de plats:");
         consultarMenu();
@@ -266,6 +285,7 @@ public class Main {
         try {
             PrintWriter writer = new PrintWriter(new FileWriter("DADES/COMANDA.txt", true));
             writer.println("Comanda " + comanda.getIdComanda());
+            writer.println("Assignada a: " + empleat.getNom());
             for (Plat plat : comanda.getPlats()) {
                 writer.println(plat.getNom() + " - " + plat.getPreu() + "€");
             }
@@ -277,6 +297,7 @@ public class Main {
             System.out.println("No s'ha pogut crear el fitxer");
             e.printStackTrace();
         }
+        validaUsuari();
     }
 
     static Plat buscarPlat(String nomPlat) {
@@ -327,6 +348,7 @@ public class Main {
             default:
                 System.out.println("Opció no vàlida");
         }
+        
     }
 
     static void afegirPersonal() {
@@ -371,6 +393,7 @@ public class Main {
             System.out.println("No s'ha pogut afegir l'empleat.");
             e.printStackTrace();
         }
+        validaUsuari();
     }
 
     static void afegirGerent() {
@@ -392,6 +415,7 @@ public class Main {
             System.out.println("No s'ha pogut afegir el gerent.");
             e.printStackTrace();
         }
+        validaUsuari();
     }
 
     static void eliminarPersonal() {
@@ -399,6 +423,27 @@ public class Main {
     }
 
     static void mostrarPersonal() {
-        // Implementació per mostrar personal
+        try {
+            File fitxerUsuaris = new File("DADES/USUARIS.txt");
+            Scanner myReader = new Scanner(fitxerUsuaris);
+
+            System.out.println("Llista de personal:");
+            System.out.println("--------------------");
+
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                if (!data.isEmpty()) {
+                    String[] dadesUsuari = data.split(",");
+                    String nom = dadesUsuari[0];
+                    String rol = dadesUsuari[2];
+                    System.out.println("Nom: " + nom + " | Rol: " + rol);
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("No s'ha trobat el fitxer d'usuaris.");
+            e.printStackTrace();
+        }  
+        validaUsuari(); 
     }
 }
